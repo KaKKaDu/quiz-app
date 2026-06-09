@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { AppError, SuccessDataAny } from '@/app/errors';
+import { AppError, SuccessDataAny } from './errors';
 
 export type LogLevel = 'info' | 'error' | 'warn';
 

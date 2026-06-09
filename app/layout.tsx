@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { JetBrains_Mono } from 'next/font/google';
 import { cn } from '@/lib/utils';
+import { Header } from '@/templates/components/layout/header';
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
@@ -23,7 +24,10 @@ export default function RootLayout({
       lang="en"
       className={cn('h-full antialiased', 'font-mono', jetbrainsMono.variable)}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Header />
+        <main className="flex-1 pt-16">{children}</main>
+      </body>
     </html>
   );
 }

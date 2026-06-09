@@ -4,9 +4,12 @@ Welcome to the `quiz_app` codebase. This file serves as the root entry point for
 
 ## Navigation & Standards
 
-- [Typing Architecture Standards](./app/types/GEMINI.md)
-- [Service & Repository Architecture](./app/services/GEMINI.md)
-- [Schema Architecture Standards](./app/schemas/GEMINI.md)
+- [Typing Architecture Standards](types/GEMINI.md)
+- [Service & Repository Architecture](services/GEMINI.md)
+- [Schema Architecture Standards](schemas/GEMINI.md)
+- [UI & Visual Standards](templates/GEMINI.md)
+- [Component Architecture Standards](templates/components/GEMINI.md)
+- [Section Architecture Standards](templates/sections/GEMINI.md)
 
 ## Development Workflow
 

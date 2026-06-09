@@ -1,3 +1,5 @@
+import { HeroSection } from '@/templates/sections/hero.section';
+
 export default function Home() {
-  return <></>;
+  return <HeroSection />;
 }

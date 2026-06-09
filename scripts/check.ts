@@ -40,7 +40,6 @@ const main = async () => {
   results.push(runCheck('TypeScript', 'npx tsc --noEmit'));
 
   // 2. Linting Check
-  // Note: Using the command directly as eslint 9 might have different args than package.json if it was old
   results.push(runCheck('Linting', 'npx eslint .'));
 
   // 3. Formatting Check
