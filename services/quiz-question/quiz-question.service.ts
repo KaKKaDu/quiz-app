@@ -17,6 +17,16 @@ export class QuizQuestionService {
     return result;
   }
 
+  async createQuestions(
+    questions: QuizQuestion[]
+  ): Promise<SuccessDataAny<QuizQuestion[]>> {
+    const context: string = 'QuizQuestionService.createQuestions';
+    const result: SuccessDataAny<QuizQuestion[]> =
+      await this.repository.createMany(questions);
+    Logger.report(context, result);
+    return result;
+  }
+
   async getQuestion(
     id: string
   ): Promise<SuccessDataAny<Nullable<QuizQuestion>>> {

@@ -1,20 +1,27 @@
 import { getMongoService } from '../mongo';
 import { QuizResultsRepository } from './quiz-results.repository';
 import { QuizResultsService } from './quiz-results.service';
-import { Nullable } from '@/types/common.types';
 
-let quizResultsService: Nullable<QuizResultsService> = null;
+/**
+ * Caching the QuizResultsService on globalThis to prevent multiple instances
+ * during Next.js hot reloads in development.
+ */
+const globalWithQuizResults = globalThis as unknown as {
+  quizResultsService: QuizResultsService | undefined;
+};
 
 /**
  * Returns a singleton instance of the QuizResultsService.
  */
 export const getQuizResultsService = (): QuizResultsService => {
-  if (!quizResultsService) {
+  if (!globalWithQuizResults.quizResultsService) {
     const mongoService = getMongoService();
     const repository: QuizResultsRepository = new QuizResultsRepository(
       mongoService
     );
-    quizResultsService = new QuizResultsService(repository);
+    globalWithQuizResults.quizResultsService = new QuizResultsService(
+      repository
+    );
   }
-  return quizResultsService;
+  return globalWithQuizResults.quizResultsService;
 };

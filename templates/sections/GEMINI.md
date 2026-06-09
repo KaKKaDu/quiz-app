@@ -12,4 +12,4 @@ Sections are the high-level building blocks of the application that compose mult
 - **Rendering Strategy**:
   - Prefer **Server Components** for sections to handle data fetching on the server.
   - Transition to **Client Components** only when the specific section flow benefits from it or requires client-side state management that cannot be lifted.
-- **Location**: All sections should be stored in the `templates/sections/` directory.
+- **Location**: Sections should be stored in the `templates/sections/` directory. To ensure readability and organization, sections related to a specific page **MUST** be placed inside an appropriate sub-folder named after that page (e.g., `templates/sections/home/`, `templates/sections/create-quiz/`). Only truly global or shared sections should remain in the root of the `sections/` directory.

@@ -1,16 +1,21 @@
-import { Nullable } from '@/types/common.types';
 import { MongoRepository } from './mongo.repository';
 import { MongoService } from './mongo.service';
 
-let mongoService: Nullable<MongoService> = null;
+/**
+ * Caching the MongoService on globalThis to prevent multiple instances
+ * during Next.js hot reloads in development.
+ */
+const globalWithMongo = globalThis as unknown as {
+  mongoService: MongoService | undefined;
+};
 
 /**
  * Returns a singleton instance of the MongoService.
  */
 export const getMongoService = (): MongoService => {
-  if (!mongoService) {
+  if (!globalWithMongo.mongoService) {
     const repository: MongoRepository = new MongoRepository();
-    mongoService = new MongoService(repository);
+    globalWithMongo.mongoService = new MongoService(repository);
   }
-  return mongoService;
+  return globalWithMongo.mongoService;
 };

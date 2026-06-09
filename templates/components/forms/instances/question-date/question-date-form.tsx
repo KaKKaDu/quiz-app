@@ -42,7 +42,7 @@ export const QuestionDateForm = ({
       type: 'date',
       question: values.question,
       body: {
-        correctAnswer: values.correctAnswer,
+        correctAnswer: new Date(values.correctAnswer),
       },
     };
     onSubmit(questionData);

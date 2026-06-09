@@ -1,4 +1,4 @@
-import { NotFoundSection } from '@/templates/sections/not-found.section';
+import { NotFoundSection } from '@/templates/sections/404-page/not-found.section';
 
 export default function NotFound() {
   return <NotFoundSection />;

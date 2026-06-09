@@ -9,11 +9,16 @@ import ReactHookFormInputsHandler from '@/templates/components/forms/react-hook-
 import { Button } from '@/templates/components/ui/button';
 import { Logger } from '@/lib/logger';
 
+type QuizFormProps = {
+  onSubmit: (data: QuizFormValues) => void;
+  initialValues?: QuizFormValues;
+};
+
 /**
  * QuizForm component for basic quiz information.
  * Adheres to the Form Architecture Standards using RHF, Zod, and InputsHandler.
  */
-export const QuizForm = () => {
+export const QuizForm = ({ onSubmit, initialValues }: QuizFormProps) => {
   const {
     register,
     control,
@@ -21,20 +26,21 @@ export const QuizForm = () => {
     handleSubmit,
   } = useForm<QuizFormValues>({
     resolver: zodResolver(QuizFormSchema),
-    defaultValues: {
+    defaultValues: initialValues || {
       name: '',
       author: '',
       description: '',
     },
   });
 
-  const onSubmit = (data: QuizFormValues) => {
+  const submitHandler = (data: QuizFormValues) => {
+    onSubmit(data);
     Logger.info(`Quiz Form Submitted: ${JSON.stringify(data, null, 2)}`);
   };
 
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(submitHandler)}
       className="flex w-full flex-col gap-8"
     >
       <ReactHookFormInputsHandler
@@ -46,7 +52,7 @@ export const QuizForm = () => {
 
       <div className="flex justify-end">
         <Button type="submit" size="lg">
-          Continue to Questions
+          Save and Proceed
         </Button>
       </div>
     </form>

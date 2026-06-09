@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Button } from '@/templates/components/ui/button';
-import { HouseIcon } from '@phosphor-icons/react';
+import { HouseIcon } from '@phosphor-icons/react/ssr';
 
 /**
  * Navigation component for the 404 page.

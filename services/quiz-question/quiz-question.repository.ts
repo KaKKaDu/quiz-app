@@ -138,4 +138,25 @@ export class QuizQuestionRepository {
       return failedResult;
     }
   }
+
+  async createMany(
+    questions: QuizQuestion[]
+  ): Promise<SuccessDataAny<QuizQuestion[]>> {
+    const context: string = 'QuizQuestionRepository.createMany';
+    try {
+      const result: SuccessDataAny<QuizQuestion[]> =
+        await this.mongoService.execute(async () => {
+          const inserted = await QuizQuestionModel.insertMany(questions);
+          const list: QuizQuestion[] = inserted.map((q) => q.toObject());
+          return list;
+        });
+      Logger.report(context, result);
+      return result;
+    } catch (error: unknown) {
+      const failedResult: SuccessDataAny<QuizQuestion[]> =
+        handleError<QuizQuestion[]>(error);
+      Logger.report(context, failedResult);
+      return failedResult;
+    }
+  }
 }

@@ -1,5 +1,5 @@
 import mongoose, { Mongoose } from 'mongoose';
-import { SuccessDataAny, handleError } from '../../lib/errors';
+import { SuccessDataAny, handleError } from '@/lib/errors';
 import { Logger } from '@/lib/logger';
 import { Nullable } from '@/types/common.types';
 
@@ -17,7 +17,11 @@ export class MongoRepository {
         throw new Error('MONGODB_URI is not defined in environment variables');
       }
 
-      this.connection = await mongoose.connect(mongoUri);
+      const dbName: string = process.env.MONGODB_DB_NAME || 'quiz_app';
+
+      this.connection = await mongoose.connect(mongoUri, {
+        dbName,
+      });
       const result: SuccessDataAny<Mongoose> = {
         success: true,
         data: this.connection,

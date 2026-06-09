@@ -17,6 +17,7 @@ This document defines the visual and structural standards for all UI elements in
 ## 2. Icons
 
 - **Library**: Use **Phosphor Icons** (`@phosphor-icons/react`) exclusively for all icons in the project.
+- **Naming**: Always use the version of icons with the **`Icon` suffix** (e.g., `CheckIcon`, `TrashIcon`, `PlusIcon`). Do **NOT** use the deprecated unsuffixed names.
 - **Consistency**: Maintain consistent weight (e.g., `regular`, `bold`, `fill`) across related UI elements.
 
 ## 3. Layout & Structure

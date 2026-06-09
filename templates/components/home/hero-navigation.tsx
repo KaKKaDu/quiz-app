@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Button } from '@/templates/components/ui/button';
-import { ArrowRightIcon } from '@phosphor-icons/react';
+import { ArrowRightIcon } from '@phosphor-icons/react/ssr';
 
 /**
  * Navigation component for the Hero section.
