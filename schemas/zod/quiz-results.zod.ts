@@ -24,10 +24,7 @@ export const QuizMistakeZodSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('number-range'),
     questionId: z.string(),
-    wrongAnswer: z.object({
-      min: z.number(),
-      max: z.number(),
-    }),
+    wrongAnswer: z.number(),
   }),
 ]);
 

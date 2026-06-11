@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { QuizQuestion } from '@/schemas/zod/quiz-question.zod';
-import { cn } from '@/lib/utils';
 import {
   CalendarIcon,
   ListChecksIcon,
@@ -10,6 +9,7 @@ import {
   NumberSquareOneIcon,
   SelectionIcon,
 } from '@phosphor-icons/react';
+import { cn } from '@/lib/utils/cn';
 
 type QuizQuestionPreviewProps = {
   question: QuizQuestion;

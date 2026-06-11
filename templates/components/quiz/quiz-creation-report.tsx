@@ -1,15 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/templates/components/ui/button';
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
-import {
-  CopyIcon,
-  WarningIcon,
-  ArrowRightIcon,
-  CheckCircleIcon,
-} from '@phosphor-icons/react';
+import { CopyableLink } from '@/templates/components/ui/copyable-link';
+import { WarningIcon, CheckCircleIcon } from '@phosphor-icons/react';
 
 type QuizCreationReportProps = {
   quizId?: string;
@@ -19,29 +13,16 @@ type QuizCreationReportProps = {
 
 /**
  * QuizCreationReport displays the final result of the quiz creation process.
- * Provides a shareable link and feedback on success or failure.
- * Adheres to monochrome minimalistic style.
+ * Refactored to use the CopyableLink component.
  */
 export const QuizCreationReport = ({
   quizId,
   error,
   quizName,
 }: QuizCreationReportProps) => {
-  const [copied, setCopied] = useState(false);
-
   // In a real app, this would come from an environment variable or window.location
   const domain = typeof window !== 'undefined' ? window.location.origin : '';
-  const quizLink = `${domain}/quiz/${quizId}`;
-
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(quizLink);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy!', err);
-    }
-  };
+  const quizLink = quizId ? `${domain}/quiz/${quizId}` : '';
 
   if (error) {
     return (
@@ -87,39 +68,7 @@ export const QuizCreationReport = ({
       </div>
 
       <div className="flex flex-col gap-4 border-t border-border pt-8">
-        <div className="flex flex-col gap-2">
-          <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-            Shareable Link
-          </label>
-          <div className="flex items-center gap-2">
-            <div className="flex-1 truncate border border-border bg-muted/30 p-3 text-sm font-mono text-muted-foreground">
-              {quizLink}
-            </div>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={handleCopy}
-              className={cn(
-                'size-12 shrink-0 transition-colors',
-                copied && 'border-green-500 text-green-500'
-              )}
-              title="Copy to clipboard"
-            >
-              {copied ? <CheckCircleIcon size={20} /> : <CopyIcon size={20} />}
-            </Button>
-          </div>
-        </div>
-
-        <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-          <Button
-            asChild
-            className="flex-1 py-6 text-xs font-bold uppercase tracking-widest"
-          >
-            <Link href={`/quiz/${quizId}`}>
-              View Quiz <ArrowRightIcon size={16} className="ml-2" />
-            </Link>
-          </Button>
-        </div>
+        <CopyableLink link={quizLink} label="Shareable Link" />
       </div>
     </div>
   );

@@ -4,8 +4,8 @@ import ReactHookFormInputLabel from '../../react-hook-form-input-label/ReactHook
 import { Control, Controller, FieldErrors, FieldValues } from 'react-hook-form';
 import ReactHookFormToggleButton from './react-hook-form-toggle-button/ReactHookFormToggleButton';
 import ReactHookFormInputErrors from '../../react-hook-form-input-errors/ReactHookFormInputErrors';
-import { cn } from '@/lib/utils';
 import { RHFData, RHFOption } from '@/types/forms.types';
+import { cn } from '@/lib/utils/cn';
 
 type ReactHookFormToggleProps<SchemaValues extends FieldValues> = {
   control: Control<SchemaValues>;

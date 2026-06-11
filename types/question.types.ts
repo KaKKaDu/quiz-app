@@ -10,6 +10,12 @@ export type QuestionSubmitHandler<T extends QuizQuestion = QuizQuestion> = (
 ) => void;
 
 /**
+ * Represents any valid value a user can provide as an answer to a question.
+ * Strictly typed to avoid 'any'.
+ */
+export type QuestionValue = number | number[] | Date | string | null;
+
+/**
  * Unified validation result returned by question view components.
  */
 export type ValidationResult = {

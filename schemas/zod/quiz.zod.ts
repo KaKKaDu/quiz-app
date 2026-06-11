@@ -6,6 +6,7 @@ const QuizBaseZodSchema = z.object({
   id: z.string(),
   name: z.string(),
   author: z.string(),
+  description: z.string().optional(),
 });
 
 export const QuizZodSchema = QuizBaseZodSchema.extend({

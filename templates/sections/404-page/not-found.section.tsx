@@ -7,7 +7,7 @@ import { NotFoundNavigation } from '@/templates/components/not-found/not-found-n
  */
 export const NotFoundSection = () => {
   return (
-    <section className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center gap-8 p-8 text-center">
+    <section className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center gap-8 p-4 sm:p-8 text-center">
       <div className="flex flex-col gap-3">
         <h1 className="text-6xl font-bold tracking-tighter text-foreground sm:text-8xl">
           404

@@ -63,7 +63,7 @@ export const QuizDataPreview = ({ data, onEdit }: QuizDataPreviewProps) => {
             </span>
           </div>
           <p className="text-sm leading-relaxed text-foreground">
-            {data.description}
+            {data.description || 'No description provided.'}
           </p>
         </div>
       </div>

@@ -14,7 +14,8 @@ import { Input } from '@/templates/components/ui/input';
 import { Trash, Plus } from '@phosphor-icons/react';
 import { QuestionSubmitHandler } from '@/types/question.types';
 import { QuizQuestion } from '@/schemas/zod/quiz-question.zod';
-import { cn, generateId } from '@/lib/utils';
+import { cn } from '@/lib/utils/cn';
+import { generateId } from '@/lib/utils/generate-id';
 
 type QuestionChooseOneFormProps = {
   onSubmit: QuestionSubmitHandler;

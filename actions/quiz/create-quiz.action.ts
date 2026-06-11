@@ -7,7 +7,8 @@ import { Logger } from '@/lib/logger';
 import { Quiz } from '@/schemas/zod/quiz.zod';
 import { QuizQuestion } from '@/schemas/zod/quiz-question.zod';
 import { QuizFormValues } from '@/schemas/zod/quiz-form.zod';
-import { generateId } from '@/lib/utils';
+
+import { generateId } from '@/lib/utils/generate-id';
 
 /**
  * Server action to create a full quiz including its questions.
@@ -35,6 +36,7 @@ export const createQuizAction = async (
       id: quizId,
       name: formData.name,
       author: formData.author,
+      description: formData.description,
       questionIds: questions.map((q) => q.id),
       resultIds: [], // Results are empty for a new quiz
     };

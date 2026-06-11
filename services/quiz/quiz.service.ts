@@ -107,6 +107,7 @@ export class QuizService {
         id: quiz.id,
         name: quiz.name,
         author: quiz.author,
+        description: quiz.description,
         data: questionsResult.data!,
         results: resultsResult.data!,
       };

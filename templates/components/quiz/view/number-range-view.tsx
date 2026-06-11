@@ -3,32 +3,37 @@
 import React, { useState, useEffect } from 'react';
 import { QuizQuestion } from '@/schemas/zod/quiz-question.zod';
 import { Input } from '@/templates/components/ui/input';
-import { cn } from '@/lib/utils';
 import { ValidationHandler } from '@/types/question.types';
 import { QuizMistake } from '@/schemas/zod/quiz-results.zod';
+import { cn } from '@/lib/utils/cn';
 
 type NumberRangeViewProps = {
   question: Extract<QuizQuestion, { type: 'number-range' }>;
   onValidate?: ValidationHandler;
   validateTrigger?: boolean;
   report?: boolean;
+  value?: number | null;
 };
 
 /**
  * NumberRangeView for numeric range questions.
  * Validates if a single user-provided number falls within the specified range.
+ * Refactored to return a single number for wrongAnswer in mistakes.
  */
 export const NumberRangeView = ({
   question,
   onValidate,
   validateTrigger,
-  report,
+  report = false,
+  value = null,
 }: NumberRangeViewProps) => {
-  const [value, setValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>(
+    value !== null ? value.toString() : ''
+  );
 
   useEffect(() => {
     if (validateTrigger && onValidate) {
-      const numericValue = parseFloat(value);
+      const numericValue = parseFloat(inputValue);
       const isWithinRange =
         !isNaN(numericValue) &&
         numericValue >= question.body.correctAnswer.min &&
@@ -40,10 +45,7 @@ export const NumberRangeView = ({
         mistakes.push({
           type: 'number-range',
           questionId: question.id,
-          wrongAnswer: {
-            min: isNaN(numericValue) ? 0 : numericValue,
-            max: isNaN(numericValue) ? 0 : numericValue,
-          },
+          wrongAnswer: isNaN(numericValue) ? 0 : numericValue,
         });
       }
 
@@ -55,18 +57,18 @@ export const NumberRangeView = ({
   }, [
     validateTrigger,
     onValidate,
-    value,
+    inputValue,
     question.body.correctAnswer,
     question.id,
   ]);
 
-  const numericValue = parseFloat(value);
+  const numericValue = parseFloat(inputValue);
   const isCorrect =
     !isNaN(numericValue) &&
     numericValue >= question.body.correctAnswer.min &&
     numericValue <= question.body.correctAnswer.max;
 
-  const isWrong = report && value !== '' && !isCorrect;
+  const isWrong = report && inputValue !== '' && !isCorrect;
 
   return (
     <div className="flex flex-col gap-4">
@@ -77,8 +79,8 @@ export const NumberRangeView = ({
         <Input
           type="number"
           disabled={report}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
           placeholder="Enter a number within range"
           className={cn(
             'h-12 border-border',
@@ -91,7 +93,7 @@ export const NumberRangeView = ({
           )}
         />
         {report && !isCorrect && (
-          <p className="text-xs font-bold uppercase tracking-widest">
+          <p className="text-xs font-bold uppercase tracking-widest text-green-600">
             Correct Range: {question.body.correctAnswer.min} —{' '}
             {question.body.correctAnswer.max}
           </p>

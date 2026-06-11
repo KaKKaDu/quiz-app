@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { RHFOption } from '@/types/forms.types';
-import { cn } from '@/lib/utils';
+
+import { cn } from '@/lib/utils/cn';
 
 type ReactHookFormToggleButtonProps = {
   value: string;

@@ -12,7 +12,8 @@ import ReactHookFormInputsHandler from '@/templates/components/forms/react-hook-
 import { Button } from '@/templates/components/ui/button';
 import { QuestionSubmitHandler } from '@/types/question.types';
 import { QuizQuestion } from '@/schemas/zod/quiz-question.zod';
-import { generateId } from '@/lib/utils';
+
+import { generateId } from '@/lib/utils/generate-id';
 
 type QuestionNumberFormProps = {
   onSubmit: QuestionSubmitHandler;

@@ -108,7 +108,7 @@ export const QuizQuestionsCreator = ({
         <Button
           variant="outline"
           onClick={addCreator}
-          className="flex py-5 w-full items-center justify-center gap-2 text-xs font-bold uppercase tracking-[0.2em]"
+          className="flex w-full items-center justify-center gap-2 text-xs font-bold uppercase tracking-[0.2em]"
         >
           <PlusIcon size={20} />
           Add Question
@@ -117,7 +117,7 @@ export const QuizQuestionsCreator = ({
         <Button
           onClick={() => onSubmit(questions)}
           disabled={questions.length === 0}
-          className="flex py-5 w-full items-center justify-center gap-2 text-xs font-bold uppercase tracking-[0.2em]"
+          className="flex w-full items-center justify-center gap-2 text-xs font-bold uppercase tracking-[0.2em]"
         >
           <CheckCircleIcon size={20} />
           Submit With {questions.length} Questions

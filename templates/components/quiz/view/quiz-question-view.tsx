@@ -7,24 +7,26 @@ import { ChooseMultipleView } from './choose-multiple-view';
 import { NumberView } from './number-view';
 import { NumberRangeView } from './number-range-view';
 import { DateView } from './date-view';
-import { ValidationHandler } from '@/types/question.types';
+import { ValidationHandler, QuestionValue } from '@/types/question.types';
 
 type QuizQuestionViewProps = {
   question: QuizQuestion;
   onValidate?: ValidationHandler;
   validateTrigger?: boolean;
   report?: boolean;
+  value?: QuestionValue;
 };
 
 /**
  * QuizQuestionView acts as a router for different question type views.
- * It provides a unified interface for displaying and validating questions.
+ * Supports passing a strictly typed value for review/report modes.
  */
 export const QuizQuestionView = ({
   question,
   onValidate,
   validateTrigger,
   report,
+  value,
 }: QuizQuestionViewProps) => {
   const renderView = () => {
     switch (question.type) {
@@ -35,6 +37,7 @@ export const QuizQuestionView = ({
             onValidate={onValidate}
             validateTrigger={validateTrigger}
             report={report}
+            value={value as number | null}
           />
         );
       case 'choose-multiple':
@@ -44,6 +47,7 @@ export const QuizQuestionView = ({
             onValidate={onValidate}
             validateTrigger={validateTrigger}
             report={report}
+            value={value as number[]}
           />
         );
       case 'number':
@@ -53,6 +57,7 @@ export const QuizQuestionView = ({
             onValidate={onValidate}
             validateTrigger={validateTrigger}
             report={report}
+            value={value as number | null}
           />
         );
       case 'number-range':
@@ -62,6 +67,7 @@ export const QuizQuestionView = ({
             onValidate={onValidate}
             validateTrigger={validateTrigger}
             report={report}
+            value={value as number | null}
           />
         );
       case 'date':
@@ -71,6 +77,7 @@ export const QuizQuestionView = ({
             onValidate={onValidate}
             validateTrigger={validateTrigger}
             report={report}
+            value={value as Date | string | null}
           />
         );
       default:

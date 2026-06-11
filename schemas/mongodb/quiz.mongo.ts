@@ -6,6 +6,7 @@ const QuizMongoSchema: Schema<Quiz> = new Schema<Quiz>(
     id: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     author: { type: String, required: true },
+    description: { type: String, required: false, default: '' },
     questionIds: { type: [String], required: true },
     resultIds: { type: [String], required: true },
   },

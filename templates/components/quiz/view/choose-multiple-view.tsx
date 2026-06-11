@@ -2,29 +2,31 @@
 
 import React, { useState, useEffect } from 'react';
 import { QuizQuestion } from '@/schemas/zod/quiz-question.zod';
-import { cn } from '@/lib/utils';
 import { CheckIcon } from '@phosphor-icons/react';
 import { ValidationHandler } from '@/types/question.types';
 import { QuizMistake } from '@/schemas/zod/quiz-results.zod';
+import { cn } from '@/lib/utils/cn';
 
 type ChooseMultipleViewProps = {
   question: Extract<QuizQuestion, { type: 'choose-multiple' }>;
   onValidate?: ValidationHandler;
   validateTrigger?: boolean;
   report?: boolean;
+  value?: number[];
 };
 
 /**
  * ChooseMultipleView for multiple-choice questions.
- * Calculates partial correctness and provides a list of mistakes.
+ * Refactored to avoid cascading renders by using stable initialization.
  */
 export const ChooseMultipleView = ({
   question,
   onValidate,
   validateTrigger,
-  report,
+  report = false,
+  value = [],
 }: ChooseMultipleViewProps) => {
-  const [selectedOptions, setSelectedOptions] = useState<number[]>([]);
+  const [selectedOptions, setSelectedOptions] = useState<number[]>(value);
 
   useEffect(() => {
     if (validateTrigger && onValidate) {
@@ -86,11 +88,11 @@ export const ChooseMultipleView = ({
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <h3 className="text-lg font-medium text-foreground">
+    <div className="flex flex-col gap-6">
+      <h3 className="text-lg font-bold tracking-tight text-foreground sm:text-xl">
         {question.question}
       </h3>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
         {question.body.options.map((option) => {
           const isSelected = selectedOptions.includes(option.index);
           const isCorrect = question.body.correctAnswer.includes(option.index);
@@ -99,14 +101,16 @@ export const ChooseMultipleView = ({
           return (
             <button
               key={option.index}
+              type="button"
               disabled={report}
               onClick={() => toggleOption(option.index)}
               className={cn(
-                'flex items-center gap-4 border border-border p-4 text-left transition-all',
+                'group relative flex items-center gap-4 border border-border p-5 text-left transition-all duration-200 outline-none',
+                !report &&
+                  'cursor-pointer hover:border-foreground/40 hover:bg-muted/30',
                 !report &&
                   isSelected &&
-                  'border-foreground bg-foreground/5 font-semibold',
-                !report && !isSelected && 'hover:bg-muted/50',
+                  'border-foreground bg-foreground/5 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.05)]',
                 report &&
                   isCorrect &&
                   'border-green-500 bg-green-50 text-green-700 dark:bg-green-950/20 dark:text-green-400',
@@ -115,21 +119,48 @@ export const ChooseMultipleView = ({
                   'border-destructive bg-destructive/5 text-destructive'
               )}
             >
+              {/* Checkbox Indicator */}
               <div
                 className={cn(
-                  'flex size-5 shrink-0 items-center justify-center border border-border',
-                  isSelected && 'border-foreground bg-foreground'
+                  'flex size-6 shrink-0 items-center justify-center border-2 border-border transition-all duration-300 pointer-events-none',
+                  isSelected && 'border-foreground bg-foreground',
+                  report && isCorrect && 'border-green-500 bg-green-500',
+                  report &&
+                    isWrongSelection &&
+                    'border-destructive bg-destructive'
                 )}
               >
-                {isSelected && (
+                <div
+                  className={cn(
+                    'transition-transform duration-300 scale-0 pointer-events-none',
+                    isSelected && 'scale-100'
+                  )}
+                >
                   <CheckIcon
                     size={14}
                     className="text-background"
                     weight="bold"
                   />
-                )}
+                </div>
               </div>
-              <span className="text-sm">{option.content}</span>
+
+              <div className="flex flex-col gap-1 pointer-events-none">
+                <span className="text-sm font-medium leading-tight">
+                  {option.content}
+                </span>
+              </div>
+
+              {/* Status Badge in Report Mode */}
+              {report && isCorrect && (
+                <span className="ml-auto text-[10px] font-black uppercase tracking-[0.2em] text-green-600 pointer-events-none">
+                  Correct
+                </span>
+              )}
+              {report && isWrongSelection && (
+                <span className="ml-auto text-[10px] font-black uppercase tracking-[0.2em] text-destructive pointer-events-none">
+                  Incorrect
+                </span>
+              )}
             </button>
           );
         })}

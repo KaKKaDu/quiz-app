@@ -9,9 +9,9 @@ import ReactHookFormInputLabel from '../../react-hook-form-input-label/ReactHook
 import ReactHookFormInputErrors from '../../react-hook-form-input-errors/ReactHookFormInputErrors';
 import { ChangeEvent, InputHTMLAttributes, ReactElement, useMemo } from 'react';
 import { handleRHFInputSeparator } from './ReactHookFormInput.lib';
-import { cn } from '@/lib/utils';
 import { RHFData } from '@/types/forms.types';
 import { Input } from '@/templates/components/ui/input';
+import { cn } from '@/lib/utils/cn';
 
 type ReactHookFormInputProps<SchemaValues extends FieldValues> = {
   register: UseFormRegister<SchemaValues>;

@@ -1,23 +1,21 @@
-import { notFound } from 'next/navigation';
 import { getQuizService } from '@/services/quiz';
-import { QuizSection } from '@/templates/sections/quiz-page/quiz.section';
-import { QuizFull } from '@/schemas/zod/quiz.zod';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-type QuizPageProps = {
+type QuizResultsPageProps = {
   params: Promise<{
     quizId: string;
   }>;
 };
 
-/**
- * QuizPage server component.
- * Fetches the full quiz data and renders the QuizSection.
- * Handles 404 if the quiz is not found.
- */
-export default async function QuizPage({ params }: QuizPageProps) {
+import React from 'react';
+import { notFound } from 'next/navigation';
+import { QuizFull } from '@/schemas/zod/quiz.zod';
+import QuizResultsSection from '@/templates/sections/quiz-results-page/quiz-results.section';
+import { Logger } from '@/lib/logger';
+
+const QuizResultsPage = async ({ params }: QuizResultsPageProps) => {
   const { quizId } = await params;
   const quizService = getQuizService();
 
@@ -31,5 +29,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
   // Cast because we requested full: true and serialize to plain object
   const quiz = JSON.parse(JSON.stringify(result.data)) as QuizFull;
 
-  return <QuizSection quiz={quiz} />;
-}
+  return <QuizResultsSection quiz={quiz} />;
+};
+
+export default QuizResultsPage;

@@ -59,7 +59,7 @@ export const CreateQuizSection = () => {
   // Show the final report if creation is complete (success or error)
   if (result) {
     return (
-      <section className="mx-auto flex w-full max-w-[40rem] flex-col gap-8 p-8">
+      <section className="mx-auto flex w-full max-w-[40rem] flex-col gap-8 p-4 sm:p-8">
         <QuizCreationReport
           quizId={result.quizId}
           error={result.error}

@@ -3,31 +3,36 @@
 import React, { useState, useEffect } from 'react';
 import { QuizQuestion } from '@/schemas/zod/quiz-question.zod';
 import { Input } from '@/templates/components/ui/input';
-import { cn } from '@/lib/utils';
 import { ValidationHandler } from '@/types/question.types';
 import { QuizMistake } from '@/schemas/zod/quiz-results.zod';
+import { cn } from '@/lib/utils/cn';
 
 type NumberViewProps = {
   question: Extract<QuizQuestion, { type: 'number' }>;
   onValidate?: ValidationHandler;
   validateTrigger?: boolean;
   report?: boolean;
+  value?: number | null;
 };
 
 /**
  * NumberView for numeric input questions.
+ * Refactored to avoid cascading renders by using stable initialization.
  */
 export const NumberView = ({
   question,
   onValidate,
   validateTrigger,
-  report,
+  report = false,
+  value = null,
 }: NumberViewProps) => {
-  const [value, setValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>(
+    value !== null ? value.toString() : ''
+  );
 
   useEffect(() => {
     if (validateTrigger && onValidate) {
-      const numericValue = parseFloat(value);
+      const numericValue = parseFloat(inputValue);
       const isCorrect = numericValue === question.body.correctAnswer;
       const mistakes: QuizMistake[] = [];
 
@@ -47,13 +52,13 @@ export const NumberView = ({
   }, [
     validateTrigger,
     onValidate,
-    value,
+    inputValue,
     question.body.correctAnswer,
     question.id,
   ]);
 
-  const isCorrect = parseFloat(value) === question.body.correctAnswer;
-  const isWrong = report && value !== '' && !isCorrect;
+  const isCorrect = parseFloat(inputValue) === question.body.correctAnswer;
+  const isWrong = report && inputValue !== '' && !isCorrect;
 
   return (
     <div className="flex flex-col gap-4">
@@ -64,8 +69,8 @@ export const NumberView = ({
         <Input
           type="number"
           disabled={report}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
           placeholder="Enter your answer"
           className={cn(
             'h-12 border-border',
@@ -78,7 +83,7 @@ export const NumberView = ({
           )}
         />
         {report && !isCorrect && (
-          <p className="text-xs font-bold uppercase tracking-widest">
+          <p className="text-xs font-bold uppercase tracking-widest text-green-600">
             Correct Answer: {question.body.correctAnswer}
           </p>
         )}

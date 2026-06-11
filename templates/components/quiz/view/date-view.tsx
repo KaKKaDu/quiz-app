@@ -3,31 +3,38 @@
 import React, { useState, useEffect } from 'react';
 import { QuizQuestion } from '@/schemas/zod/quiz-question.zod';
 import { Input } from '@/templates/components/ui/input';
-import { cn } from '@/lib/utils';
 import { ValidationHandler } from '@/types/question.types';
 import { QuizMistake } from '@/schemas/zod/quiz-results.zod';
+import { cn } from '@/lib/utils/cn';
 
 type DateViewProps = {
   question: Extract<QuizQuestion, { type: 'date' }>;
   onValidate?: ValidationHandler;
   validateTrigger?: boolean;
   report?: boolean;
+  value?: Date | string | null;
 };
 
 /**
  * DateView for date input questions.
+ * Refactored to avoid cascading renders by using stable initialization.
  */
 export const DateView = ({
   question,
   onValidate,
   validateTrigger,
-  report,
+  report = false,
+  value = null,
 }: DateViewProps) => {
-  const [value, setValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>(() => {
+    if (!value) return '';
+    const date = new Date(value);
+    return isNaN(date.getTime()) ? '' : date.toISOString().split('T')[0];
+  });
 
   useEffect(() => {
     if (validateTrigger && onValidate) {
-      if (!value) {
+      if (!inputValue) {
         onValidate({
           correctness: 0,
           mistakes: [
@@ -41,7 +48,7 @@ export const DateView = ({
         return;
       }
 
-      const userDate = new Date(value).toDateString();
+      const userDate = new Date(inputValue).toDateString();
       const correctDate = new Date(question.body.correctAnswer).toDateString();
       const isCorrect = userDate === correctDate;
       const mistakes: QuizMistake[] = [];
@@ -50,7 +57,7 @@ export const DateView = ({
         mistakes.push({
           type: 'date',
           questionId: question.id,
-          wrongAnswer: new Date(value),
+          wrongAnswer: new Date(inputValue),
         });
       }
 
@@ -62,16 +69,16 @@ export const DateView = ({
   }, [
     validateTrigger,
     onValidate,
-    value,
+    inputValue,
     question.body.correctAnswer,
     question.id,
   ]);
 
   const isCorrect =
-    value &&
-    new Date(value).toDateString() ===
+    inputValue &&
+    new Date(inputValue).toDateString() ===
       new Date(question.body.correctAnswer).toDateString();
-  const isWrong = report && value !== '' && !isCorrect;
+  const isWrong = report && inputValue !== '' && !isCorrect;
 
   return (
     <div className="flex flex-col gap-4">
@@ -82,8 +89,8 @@ export const DateView = ({
         <Input
           type="date"
           disabled={report}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
           className={cn(
             'h-12 border-border',
             report &&
@@ -95,7 +102,7 @@ export const DateView = ({
           )}
         />
         {report && !isCorrect && (
-          <p className="text-xs font-bold uppercase tracking-widest">
+          <p className="text-xs font-bold uppercase tracking-widest text-green-600">
             Correct Date:{' '}
             {new Date(question.body.correctAnswer).toLocaleDateString()}
           </p>
