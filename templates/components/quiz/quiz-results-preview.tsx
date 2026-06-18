@@ -29,7 +29,7 @@ const QuizResultsPreview = ({ results }: QuizResultsPreviewProps) => {
             }}
             className={'text-xl font-extrabold'}
           >
-            {result.score}
+            {result.score.toFixed(2)}
           </span>
         </div>
       ))}
