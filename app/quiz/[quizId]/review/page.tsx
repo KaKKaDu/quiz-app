@@ -1,4 +1,10 @@
-import { getQuizService } from '@/services/quiz';
+import React from 'react';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
+import { QuizFull } from '@/schemas/zod/quiz.zod';
+import QuizResultsSection from '@/templates/sections/quiz-results-page/quiz-results.section';
+import { getCachedQuiz } from '@/lib/metadata/metadata-fetchers';
+import { getQuizReviewMetadata } from './metadata';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -9,18 +15,18 @@ type QuizResultsPageProps = {
   }>;
 };
 
-import React from 'react';
-import { notFound } from 'next/navigation';
-import { QuizFull } from '@/schemas/zod/quiz.zod';
-import QuizResultsSection from '@/templates/sections/quiz-results-page/quiz-results.section';
-import { Logger } from '@/lib/logger';
+export const generateMetadata = async ({
+  params,
+}: QuizResultsPageProps): Promise<Metadata> => {
+  const { quizId } = await params;
+  return getQuizReviewMetadata(quizId);
+};
 
 const QuizResultsPage = async ({ params }: QuizResultsPageProps) => {
   const { quizId } = await params;
-  const quizService = getQuizService();
 
-  // Fetch the full quiz including questions
-  const result = await quizService.getQuiz(quizId, true);
+  // Fetch the full quiz including questions (cached)
+  const result = await getCachedQuiz(quizId, true);
 
   if (!result.success || !result.data) {
     return notFound();

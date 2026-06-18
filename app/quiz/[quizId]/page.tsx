@@ -1,7 +1,9 @@
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getQuizService } from '@/services/quiz';
+import { getCachedQuiz } from '@/lib/metadata/metadata-fetchers';
 import { QuizSection } from '@/templates/sections/quiz-page/quiz.section';
 import { QuizFull } from '@/schemas/zod/quiz.zod';
+import { getQuizMetadata } from './metadata';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -12,6 +14,13 @@ type QuizPageProps = {
   }>;
 };
 
+export const generateMetadata = async ({
+  params,
+}: QuizPageProps): Promise<Metadata> => {
+  const { quizId } = await params;
+  return getQuizMetadata(quizId);
+};
+
 /**
  * QuizPage server component.
  * Fetches the full quiz data and renders the QuizSection.
@@ -19,10 +28,9 @@ type QuizPageProps = {
  */
 export default async function QuizPage({ params }: QuizPageProps) {
   const { quizId } = await params;
-  const quizService = getQuizService();
 
-  // Fetch the full quiz including questions
-  const result = await quizService.getQuiz(quizId, true);
+  // Fetch the full quiz including questions (cached)
+  const result = await getCachedQuiz(quizId, true);
 
   if (!result.success || !result.data) {
     return notFound();

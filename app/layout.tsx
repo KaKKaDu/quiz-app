@@ -3,6 +3,7 @@ import './globals.css';
 import { JetBrains_Mono } from 'next/font/google';
 import { Header } from '@/templates/components/layout/header';
 import { cn } from '@/lib/utils/cn';
+import { ThemeProvider } from '@/templates/components/layout/theme-provider';
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
@@ -23,10 +24,13 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn('h-full antialiased', 'font-mono', jetbrainsMono.variable)}
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <Header />
-        <main className="flex-1 pt-16">{children}</main>
+        <ThemeProvider>
+          <Header />
+          <main className="flex-1 pt-16">{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   );

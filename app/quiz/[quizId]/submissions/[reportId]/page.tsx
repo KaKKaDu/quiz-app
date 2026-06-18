@@ -1,9 +1,13 @@
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getQuizService } from '@/services/quiz';
-import { getQuizQuestionService } from '@/services/quiz-question';
-import { getQuizResultsService } from '@/services/quiz-results';
+import {
+  getCachedQuiz,
+  getCachedResults,
+  getCachedQuestions,
+} from '@/lib/metadata/metadata-fetchers';
 import { QuizReviewSection } from '@/templates/sections/quiz-page/quiz-review.section';
 import { Quiz, QuizFull } from '@/schemas/zod/quiz.zod';
+import { getSubmissionMetadata } from './metadata';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -15,6 +19,13 @@ type QuizReviewPageProps = {
   }>;
 };
 
+export const generateMetadata = async ({
+  params,
+}: QuizReviewPageProps): Promise<Metadata> => {
+  const { quizId } = await params;
+  return getSubmissionMetadata(quizId);
+};
+
 /**
  * QuizReviewPage server component.
  * Fetches and verifies a specific quiz result and renders the review.
@@ -22,12 +33,8 @@ type QuizReviewPageProps = {
 export default async function QuizReviewPage({ params }: QuizReviewPageProps) {
   const { quizId, reportId } = await params;
 
-  const quizService = getQuizService();
-  const questionService = getQuizQuestionService();
-  const resultsService = getQuizResultsService();
-
-  // 1. Fetch the base quiz to verify existence and check results array
-  const quizBaseResult = await quizService.getQuiz(quizId, false);
+  // 1. Fetch the base quiz to verify existence and check results array (cached)
+  const quizBaseResult = await getCachedQuiz(quizId, false);
   if (!quizBaseResult.success || !quizBaseResult.data) {
     return notFound();
   }
@@ -40,16 +47,14 @@ export default async function QuizReviewPage({ params }: QuizReviewPageProps) {
     return notFound();
   }
 
-  // 3. Fetch the specific result
-  const resultData = await resultsService.getResults(reportId);
+  // 3. Fetch the specific result (cached)
+  const resultData = await getCachedResults(reportId);
   if (!resultData.success || !resultData.data) {
     return notFound();
   }
 
-  // 4. Fetch the questions for this quiz
-  const questionsResult = await questionService.getQuestions(
-    quizBase.questionIds
-  );
+  // 4. Fetch the questions for this quiz (cached)
+  const questionsResult = await getCachedQuestions(quizBase.questionIds);
   if (!questionsResult.success || !questionsResult.data) {
     return notFound();
   }
